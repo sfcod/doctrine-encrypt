@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Tobur\DoctrineEncryptBundle\DependencyInjection\DoctrineEncryptExtension;
 use Tobur\DoctrineEncryptBundle\DependencyInjection\Compiler\RegisterServiceCompilerPass;
 
-class AmbtaDoctrineEncryptBundle extends Bundle {
+class ToburDoctrineEncryptBundle extends Bundle {
     
     public function build(ContainerBuilder $container) {
         parent::build($container);

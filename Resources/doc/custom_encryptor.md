@@ -92,7 +92,7 @@ class MyRijndael192Encryptor implements EncryptorInterface {
 ### config.yaml
 
 ``` yaml
-ambta_doctrine_encrypt:
+tobur_doctrine_encrypt:
     secret_key:           AB1CD2EF3GH4IJ5KL6MN7OP8QR9ST0UW # Your own random 256 bit key (32 characters)
     encryptor_class:      \YourBundle\Library\Encryptor\MyRijndael192Encryptor # your own encryption class
 ```

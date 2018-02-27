@@ -111,7 +111,7 @@ use Acme\DemoBundle\Entity\UserV;
 class DemoController extends Controller
 {
     /**
-     * @Route("/show-user/{id}", name="_ambta_decrypt_test", requirements={"id" = "\d+"})
+     * @Route("/show-user/{id}", name="_tobur_decrypt_test", requirements={"id" = "\d+"})
      * @Template
      */
     public function getUserAction(UserV $user) {}

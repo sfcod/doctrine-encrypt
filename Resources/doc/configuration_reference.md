@@ -3,7 +3,7 @@
 All available configuration options are listed below.
 
 ``` yaml
-ambta_doctrine_encrypt:
+tobur_doctrine_encrypt:
 # Secret key for encrypt algorithm. All secret key checks are encryptor tasks only.
 # We recommend an 32 character long key (256 bits), Use another key for each project!
 # Store a backup of this key on a secure location, losing this key will mean losing your data!

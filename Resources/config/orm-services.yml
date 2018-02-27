@@ -1,13 +1,13 @@
 services:
-    ambta_doctrine_encrypt.orm_subscriber:
+    tobur_doctrine_encrypt.orm_subscriber:
         class: Tobur\DoctrineEncryptBundle\Subscribers\DoctrineEncryptSubscriber
-        arguments: ["@annotation_reader", "%ambta_doctrine_encrypt.encryptor_class_name%", "%ambta_doctrine_encrypt.secret_key%"]
+        arguments: ["@annotation_reader", "%tobur_doctrine_encrypt.encryptor_class_name%", "%tobur_doctrine_encrypt.secret_key%"]
         tags:
             -  { name: doctrine.event_subscriber }
-    ambta_doctrine_encrypt.subscriber:
-        alias: ambta_doctrine_encrypt.orm_subscriber
-    ambta_doctrine_encrypt.encryptor:
+    tobur_doctrine_encrypt.subscriber:
+        alias: tobur_doctrine_encrypt.orm_subscriber
+    tobur_doctrine_encrypt.encryptor:
         class: Tobur\DoctrineEncryptBundle\Services\Encryptor
         arguments:
-            - "%ambta_doctrine_encrypt.encryptor_class_name%"
-            - "%ambta_doctrine_encrypt.secret_key%"
+            - "%tobur_doctrine_encrypt.encryptor_class_name%"
+            - "%tobur_doctrine_encrypt.secret_key%"
