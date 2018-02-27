@@ -1,6 +1,6 @@
 <?php
 
-namespace Ambta\DoctrineEncryptBundle\DependencyInjection;
+namespace Tobur\DoctrineEncryptBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -16,8 +16,8 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class DoctrineEncryptExtension extends Extension {
 
-    public static $supportedEncryptorClasses = array('rijndael256' => 'Ambta\DoctrineEncryptBundle\Encryptors\Rijndael256Encryptor',
-                                                    'rijndael128'=> 'Ambta\DoctrineEncryptBundle\Encryptors\Rijndael128Encryptor');
+    public static $supportedEncryptorClasses = array('rijndael256' => 'Tobur\DoctrineEncryptBundle\Encryptors\Rijndael256Encryptor',
+                                                    'rijndael128'=> 'Tobur\DoctrineEncryptBundle\Encryptors\Rijndael128Encryptor');
 
     /**
      * {@inheritDoc}

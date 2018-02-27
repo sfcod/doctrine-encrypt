@@ -1,6 +1,6 @@
 <?php
 
-namespace Ambta\DoctrineEncryptBundle\Configuration;
+namespace Tobur\DoctrineEncryptBundle\Configuration;
 
 /**
  * The Encrypted class handles the @Encrypted annotation.

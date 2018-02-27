@@ -1,12 +1,12 @@
 <?php
 
-namespace Ambta\DoctrineEncryptBundle;
+namespace Tobur\DoctrineEncryptBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Ambta\DoctrineEncryptBundle\DependencyInjection\DoctrineEncryptExtension;
-use Ambta\DoctrineEncryptBundle\DependencyInjection\Compiler\RegisterServiceCompilerPass;
+use Tobur\DoctrineEncryptBundle\DependencyInjection\DoctrineEncryptExtension;
+use Tobur\DoctrineEncryptBundle\DependencyInjection\Compiler\RegisterServiceCompilerPass;
 
 class AmbtaDoctrineEncryptBundle extends Bundle {
     

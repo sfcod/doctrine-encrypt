@@ -1,6 +1,6 @@
 <?php
 
-namespace Ambta\DoctrineEncryptBundle\Encryptors;
+namespace Tobur\DoctrineEncryptBundle\Encryptors;
 
 /**
  * Class for variable encryption
