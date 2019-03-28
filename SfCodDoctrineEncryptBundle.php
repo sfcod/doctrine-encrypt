@@ -1,14 +1,14 @@
 <?php
 
-namespace Tobur\DoctrineEncryptBundle;
+namespace SfCod\DoctrineEncryptBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Tobur\DoctrineEncryptBundle\DependencyInjection\DoctrineEncryptExtension;
-use Tobur\DoctrineEncryptBundle\DependencyInjection\Compiler\RegisterServiceCompilerPass;
+use SfCod\DoctrineEncryptBundle\DependencyInjection\DoctrineEncryptExtension;
+use SfCod\DoctrineEncryptBundle\DependencyInjection\Compiler\RegisterServiceCompilerPass;
 
-class ToburDoctrineEncryptBundle extends Bundle {
+class SfCodDoctrineEncryptBundle extends Bundle {
     
     public function build(ContainerBuilder $container) {
         parent::build($container);

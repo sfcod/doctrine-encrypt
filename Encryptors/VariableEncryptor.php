@@ -1,6 +1,6 @@
 <?php
 
-namespace Tobur\DoctrineEncryptBundle\Encryptors;
+namespace SfCod\DoctrineEncryptBundle\Encryptors;
 
 /**
  * Class for variable encryption

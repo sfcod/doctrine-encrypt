@@ -1,36 +1,66 @@
 <?php
-/*
- * Copyright 2015 Soeezy
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+
+namespace SfCod\DoctrineEncryptBundle\Services;
+
+use ReflectionClass;
+use SfCod\DoctrineEncryptBundle\Encryptors\EncryptorInterface;
+
+/**
+ * Class Encryptor
+ * @package SfCod\DoctrineEncryptBundle\Services
  */
-
-namespace Tobur\DoctrineEncryptBundle\Services;
-
 class Encryptor
 {
-    /** @var \Tobur\DoctrineEncryptBundle\Encryptors\EncryptorInterface */
+    /**
+     * @var EncryptorInterface
+     */
     protected $encryptor;
 
-    public function __construct($encryptName, $key)
+    /**
+     * Encryptor constructor.
+     *
+     * @param $encryptName
+     * @param $key
+     *
+     * @throws \ReflectionException
+     */
+    public function __construct(string $encryptName, string $key)
     {
-
-        $reflectionClass = new \ReflectionClass($encryptName);
-        $this->encryptor = $reflectionClass->newInstanceArgs( array(
-            $key
-        ));
+        $reflectionClass = new ReflectionClass($encryptName);
+        $this->encryptor = $reflectionClass->newInstanceArgs([$key]);
     }
 
-    public function getEncryptor() {
+    /**
+     * Get encryptor instance
+     *
+     * @return EncryptorInterface
+     */
+    public function getEncryptor(): EncryptorInterface
+    {
         return $this->encryptor;
     }
 
-    public function decrypt($string) {
-        return $this->encryptor->decrypt($string);
+    /**
+     * Decrypt value
+     *
+     * @param mixed $value
+     *
+     * @return string
+     */
+    public function decrypt($value)
+    {
+        return $this->encryptor->decrypt($value);
     }
 
-    public function encrypt($string) {
-        return $this->encryptor->encrypt($string);
+    /**
+     * Encrypt value
+     *
+     * @param mixed $value
+     *
+     * @return string
+     */
+    public function encrypt($value)
+    {
+        return $this->encryptor->encrypt($value);
     }
 }

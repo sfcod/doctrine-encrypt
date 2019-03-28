@@ -1,7 +1,7 @@
 <?php
 namespace YourBundle\Library\Encryptor;
 
-use Tobur\DoctrineEncryptBundle\Encryptors\EncryptorInterface;
+use SfCod\DoctrineEncryptBundle\Encryptors\EncryptorInterface;
 
 /**
  * Class for variable encryption

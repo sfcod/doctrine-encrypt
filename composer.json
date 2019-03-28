@@ -1,5 +1,5 @@
 {
-    "name": "tobur/doctrine-encrypt-bundle",
+    "name": "sfcod/doctrine-encrypt-bundle",
     "type": "symfony-bundle",
     "keywords": ["doctrine", "symfony", "aes256", "rijndael", "encrypt", "decrypt"],
     "license": "MIT",
@@ -7,12 +7,12 @@
     "require": {
         "php": "^7.1",
         "symfony/framework-bundle": "^4.0",
-        "symfony/orm-pack": "v1.0.5",
+        "symfony/orm-pack": "*",
         "ext-mcrypt": "*"
     },
     "autoload": {
         "psr-4": {
-            "Tobur\\DoctrineEncryptBundle\\": ""
+            "SfCod\\DoctrineEncryptBundle\\": ""
         }
     },
     "authors": [
@@ -21,8 +21,13 @@
             "email": "marcel@ambta.com"
         },
         {
-            "name": "Alexandr Sharamko",
-            "email": "alexandr.sharamko@gmail.com"
+            "name": "Orlov Aleksey",
+            "email": "aaorlov88@gmail.com"
+        },
+        {
+            "name": "Virchenko Maksim",
+            "email": "muslim1992@gmail.com",
+            "role": "Developer"
         }
     ]
 }

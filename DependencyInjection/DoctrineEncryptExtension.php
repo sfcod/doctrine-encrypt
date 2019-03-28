@@ -1,9 +1,14 @@
 <?php
 
-namespace Tobur\DoctrineEncryptBundle\DependencyInjection;
+namespace SfCod\DoctrineEncryptBundle\DependencyInjection;
 
+use Doctrine\Common\Annotations\Reader;
+use SfCod\DoctrineEncryptBundle\Services\Encryptor;
+use SfCod\DoctrineEncryptBundle\Subscribers\DoctrineEncryptSubscriber;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -14,29 +19,28 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class DoctrineEncryptExtension extends Extension {
-
+class DoctrineEncryptExtension extends Extension
+{
+    /**
+     * Supported encryptors list
+     *
+     * @var array
+     */
     public static $supportedEncryptorClasses = [
-        'rijndael256' => 'Tobur\DoctrineEncryptBundle\Encryptors\Rijndael256Encryptor',
-        'rijndael128'=> 'Tobur\DoctrineEncryptBundle\Encryptors\Rijndael128Encryptor'
+        'rijndael256' => Rijndael256Encryptor::class,
+        'rijndael128' => Rijndael128Encryptor::class,
     ];
 
     /**
      * {@inheritDoc}
      */
-    public function load(array $configs, ContainerBuilder $container) {
-
-        //Create configuration object
+    public function load(array $configs, ContainerBuilder $container)
+    {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        //Set orm-service in array of services
-        $services = array('orm' => 'orm-services');
-
-        //set supported encryptor classes
         $supportedEncryptorClasses = self::$supportedEncryptorClasses;
 
-        //If no secret key is set, check for framework secret, otherwise throw exception
         if (empty($config['secret_key'])) {
             if ($container->hasParameter('secret')) {
                 $config['secret_key'] = $container->getParameter('secret');
@@ -45,23 +49,32 @@ class DoctrineEncryptExtension extends Extension {
             }
         }
 
-        //If empty encryptor class, use Rijndael 256 encryptor
-        if(empty($config['encryptor_class'])) {
-            if(isset($config['encryptor']) and isset($supportedEncryptorClasses[$config['encryptor']])) {
+        if (empty($config['encryptor_class'])) {
+            if (isset($config['encryptor']) && isset($supportedEncryptorClasses[$config['encryptor']])) {
                 $config['encryptor_class'] = $supportedEncryptorClasses[$config['encryptor']];
             } else {
                 $config['encryptor_class'] = $supportedEncryptorClasses['rijndael256'];
             }
         }
 
-        //Set parameters
-        $container->setParameter('tobur_doctrine_encrypt.encryptor_class_name', $config['encryptor_class']);
-        $container->setParameter('tobur_doctrine_encrypt.secret_key', $config['secret_key']);
+        $subscriber = new Definition(DoctrineEncryptSubscriber::class);
+        $subscriber->setArguments([
+            new Reference(Reader::class),
+            $config['encryptor_class'],
+            $config['secret_key'],
+        ]);
+        $subscriber->addTag('doctrine.event_subscriber');
 
-        //Load service file
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load(sprintf('%s.yml', $services['orm']));
+        $encryptor = new Definition(Encryptor::class);
+        $encryptor->setArguments([
+            $config['encryptor_class'],
+            $config['secret_key'],
+        ]);
 
+        $container->addDefinitions([
+            DoctrineEncryptSubscriber::class => $subscriber,
+            Encryptor::class => $encryptor,
+        ]);
     }
 
     /**
@@ -69,7 +82,8 @@ class DoctrineEncryptExtension extends Extension {
      *
      * @return string
      */
-    public function getAlias() {
-        return 'tobur_doctrine_encrypt';
+    public function getAlias()
+    {
+        return 'sfcod_doctrine_encrypt';
     }
 }

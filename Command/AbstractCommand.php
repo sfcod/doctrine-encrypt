@@ -1,10 +1,10 @@
 <?php
-namespace Tobur\DoctrineEncryptBundle\Command;
+namespace SfCod\DoctrineEncryptBundle\Command;
 
-use Tobur\DoctrineEncryptBundle\Subscribers\DoctrineEncryptSubscriber;
+use SfCod\DoctrineEncryptBundle\Subscribers\DoctrineEncryptSubscriber;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -13,9 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Michael Feinbier <michael@feinbier.net>
  **/
-abstract class AbstractCommand extends ContainerAwareCommand
+abstract class AbstractCommand extends Command
 {
-
     /**
      * @var EntityManagerInterface
      */
@@ -32,14 +31,17 @@ abstract class AbstractCommand extends ContainerAwareCommand
     protected $annotationReader;
 
     /**
-     * {@inheritdoc}
+     * AbstractCommand constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param AnnotationReader $annotationReader
+     * @param DoctrineEncryptSubscriber $subscriber
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    public function __construct(EntityManagerInterface $entityManager, AnnotationReader $annotationReader, DoctrineEncryptSubscriber $subscriber)
     {
-        $container = $this->getContainer();
-        $this->entityManager = $container->get('doctrine.orm.entity_manager');
-        $this->annotationReader = $container->get('annotation_reader');
-        $this->subscriber = $container->get('tobur_doctrine_encrypt.subscriber');
+        $this->entityManager = $entityManager;
+        $this->annotationReader = $entityManager;
+        $this->subscriber = $subscriber;
     }
 
     /**
@@ -109,7 +111,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
         $properties    = [];
 
         foreach ($propertyArray as $property) {
-            if ($this->annotationReader->getPropertyAnnotation($property, 'Tobur\DoctrineEncryptBundle\Configuration\Encrypted')) {
+            if ($this->annotationReader->getPropertyAnnotation($property, 'SfCod\DoctrineEncryptBundle\Configuration\Encrypted')) {
                 $properties[] = $property;
             }
         }

@@ -4,7 +4,7 @@ We can imagine that you want to use your own encryption class, it is simpel.
 
 ### Warning: make sure you add the `<ENC>` after your encrypted string.
 
-1. Create an new class and implement Tobur\DoctrineEncryptBundle\Encryptors\EncryptorInterface.
+1. Create an new class and implement SfCod\DoctrineEncryptBundle\Encryptors\EncryptorInterface.
 2. Create a constructor with the parameter secret key `__construct($secretKey)`
 3. Create a function called encrypt with parameter data `encrypt($data)`
 4. Create a function called decrypt with parameter data `decrypt($data)`
@@ -20,7 +20,7 @@ We can imagine that you want to use your own encryption class, it is simpel.
 
 namespace YourBundle\Library\Encryptor;
 
-use Tobur\DoctrineEncryptBundle\Encryptors\EncryptorInterface;
+use SfCod\DoctrineEncryptBundle\Encryptors\EncryptorInterface;
 
 /**
  * Class for variable encryption
@@ -92,7 +92,7 @@ class MyRijndael192Encryptor implements EncryptorInterface {
 ### config.yaml
 
 ``` yaml
-tobur_doctrine_encrypt:
+sfcod_doctrine_encrypt:
     secret_key:           AB1CD2EF3GH4IJ5KL6MN7OP8QR9ST0UW # Your own random 256 bit key (32 characters)
     encryptor_class:      \YourBundle\Library\Encryptor\MyRijndael192Encryptor # your own encryption class
 ```

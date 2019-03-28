@@ -1,6 +1,6 @@
 <?php
 
-namespace Tobur\DoctrineEncryptBundle\DependencyInjection;
+namespace SfCod\DoctrineEncryptBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -21,7 +21,7 @@ class Configuration implements ConfigurationInterface {
 
         //Create tree builder
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('tobur_doctrine_encrypt');
+        $rootNode = $treeBuilder->root('sfcod_doctrine_encrypt');
 
         // Grammar of config tree
         $rootNode
