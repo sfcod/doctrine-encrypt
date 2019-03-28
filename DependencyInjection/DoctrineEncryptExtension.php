@@ -45,7 +45,7 @@ class DoctrineEncryptExtension extends Extension
             if (getenv('APP_SECRET')) {
                 $config['secret_key'] = getenv('APP_SECRET');
             } else {
-                throw new \RuntimeException('You must provide "secret_key" for DoctrineEncryptBundle or "secret" for framework');
+                throw new \RuntimeException('You must provide "secret_key" for DoctrineEncryptBundle or "APP_SECRET"  in ".env" for framework');
             }
         }
 
