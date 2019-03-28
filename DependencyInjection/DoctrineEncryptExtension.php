@@ -3,6 +3,8 @@
 namespace SfCod\DoctrineEncryptBundle\DependencyInjection;
 
 use Doctrine\Common\Annotations\Reader;
+use SfCod\DoctrineEncryptBundle\Encryptors\Rijndael128Encryptor;
+use SfCod\DoctrineEncryptBundle\Encryptors\Rijndael256Encryptor;
 use SfCod\DoctrineEncryptBundle\Services\Encryptor;
 use SfCod\DoctrineEncryptBundle\Subscribers\DoctrineEncryptSubscriber;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
