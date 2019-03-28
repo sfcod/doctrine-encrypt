@@ -1,5 +1,5 @@
 {
-    "name": "sfcod/doctrine-encrypt-bundle",
+    "name": "sfcod/doctrine-encrypt",
     "type": "symfony-bundle",
     "keywords": ["doctrine", "symfony", "aes256", "rijndael", "encrypt", "decrypt"],
     "license": "MIT",
