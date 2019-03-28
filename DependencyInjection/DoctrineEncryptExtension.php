@@ -42,8 +42,8 @@ class DoctrineEncryptExtension extends Extension
         $supportedEncryptorClasses = self::$supportedEncryptorClasses;
 
         if (empty($config['secret_key'])) {
-            if ($container->hasParameter('secret')) {
-                $config['secret_key'] = $container->getParameter('secret');
+            if (getenv('APP_SECRET')) {
+                $config['secret_key'] = getenv('APP_SECRET');
             } else {
                 throw new \RuntimeException('You must provide "secret_key" for DoctrineEncryptBundle or "secret" for framework');
             }
