@@ -1,8 +1,9 @@
 <?php
+
 namespace SfCod\DoctrineEncryptBundle\Command;
 
+use Doctrine\Common\Annotations\Reader;
 use SfCod\DoctrineEncryptBundle\Subscribers\DoctrineEncryptSubscriber;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,14 +35,16 @@ abstract class AbstractCommand extends Command
      * AbstractCommand constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param AnnotationReader $annotationReader
+     * @param Reader $annotationReader
      * @param DoctrineEncryptSubscriber $subscriber
      */
-    public function __construct(EntityManagerInterface $entityManager, AnnotationReader $annotationReader, DoctrineEncryptSubscriber $subscriber)
+    public function __construct(EntityManagerInterface $entityManager, Reader $annotationReader, DoctrineEncryptSubscriber $subscriber)
     {
         $this->entityManager = $entityManager;
-        $this->annotationReader = $entityManager;
+        $this->annotationReader = $annotationReader;
         $this->subscriber = $subscriber;
+
+        parent::__construct();
     }
 
     /**

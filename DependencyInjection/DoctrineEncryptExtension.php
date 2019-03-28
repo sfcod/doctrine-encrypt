@@ -3,6 +3,9 @@
 namespace SfCod\DoctrineEncryptBundle\DependencyInjection;
 
 use Doctrine\Common\Annotations\Reader;
+use SfCod\DoctrineEncryptBundle\Command\DoctrineDecryptDatabaseCommand;
+use SfCod\DoctrineEncryptBundle\Command\DoctrineEncryptDatabaseCommand;
+use SfCod\DoctrineEncryptBundle\Command\DoctrineEncryptStatusCommand;
 use SfCod\DoctrineEncryptBundle\Encryptors\Rijndael128Encryptor;
 use SfCod\DoctrineEncryptBundle\Encryptors\Rijndael256Encryptor;
 use SfCod\DoctrineEncryptBundle\Services\Encryptor;
@@ -77,6 +80,8 @@ class DoctrineEncryptExtension extends Extension
             DoctrineEncryptSubscriber::class => $subscriber,
             Encryptor::class => $encryptor,
         ]);
+
+        $this->registerCommands($configs, $container);
     }
 
     /**
@@ -87,5 +92,38 @@ class DoctrineEncryptExtension extends Extension
     public function getAlias()
     {
         return 'sfcod_doctrine_encrypt';
+    }
+
+    /**
+     * Register encryption commands
+     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     */
+    private function registerCommands(array $config, ContainerBuilder $container)
+    {
+        $encryptStatus = new Definition(DoctrineEncryptStatusCommand::class);
+        $encryptStatus
+            ->setAutoconfigured(true)
+            ->setAutowired(true)
+            ->addTag('console.command');
+
+        $encryptDatabase = new Definition(DoctrineEncryptDatabaseCommand::class);
+        $encryptDatabase
+            ->setAutoconfigured(true)
+            ->setAutowired(true)
+            ->addTag('console.command');
+
+        $decryptDatabase = new Definition(DoctrineDecryptDatabaseCommand::class);
+        $decryptDatabase
+            ->setAutoconfigured(true)
+            ->setAutowired(true)
+            ->addTag('console.command');
+
+        $container->addDefinitions([
+            DoctrineEncryptStatusCommand::class => $encryptStatus,
+            DoctrineEncryptDatabaseCommand::class => $encryptDatabase,
+            DoctrineDecryptDatabaseCommand::class => $decryptDatabase,
+        ]);
     }
 }
