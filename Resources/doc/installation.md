@@ -40,7 +40,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new SfCod\DoctrineEncryptBundle\AmbtaDoctrineEncryptBundle(),
+        new SfCod\DoctrineEncrypt\AmbtaDoctrineEncryptBundle(),
     );
 }
 ```

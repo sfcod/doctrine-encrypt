@@ -1,13 +1,13 @@
 <?php
 
-namespace SfCod\DoctrineEncryptBundle\Services;
+namespace SfCod\DoctrineEncrypt\Services;
 
 use ReflectionClass;
-use SfCod\DoctrineEncryptBundle\Encryptors\EncryptorInterface;
+use SfCod\DoctrineEncrypt\Encryptors\EncryptorInterface;
 
 /**
  * Class Encryptor
- * @package SfCod\DoctrineEncryptBundle\Services
+ * @package SfCod\DoctrineEncrypt\Services
  */
 class Encryptor
 {

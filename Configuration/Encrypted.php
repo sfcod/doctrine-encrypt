@@ -1,6 +1,6 @@
 <?php
 
-namespace SfCod\DoctrineEncryptBundle\Configuration;
+namespace SfCod\DoctrineEncrypt\Configuration;
 
 /**
  * The Encrypted class handles the @Encrypted annotation.

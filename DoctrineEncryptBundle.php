@@ -1,12 +1,12 @@
 <?php
 
-namespace SfCod\DoctrineEncryptBundle;
+namespace SfCod\DoctrineEncrypt;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use SfCod\DoctrineEncryptBundle\DependencyInjection\DoctrineEncryptExtension;
-use SfCod\DoctrineEncryptBundle\DependencyInjection\Compiler\RegisterServiceCompilerPass;
+use SfCod\DoctrineEncrypt\DependencyInjection\DoctrineEncryptExtension;
+use SfCod\DoctrineEncrypt\DependencyInjection\Compiler\RegisterServiceCompilerPass;
 
 class DoctrineEncryptBundle extends Bundle {
     

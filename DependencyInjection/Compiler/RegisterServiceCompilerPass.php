@@ -1,6 +1,6 @@
 <?php
 
-namespace SfCod\DoctrineEncryptBundle\DependencyInjection\Compiler;
+namespace SfCod\DoctrineEncrypt\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

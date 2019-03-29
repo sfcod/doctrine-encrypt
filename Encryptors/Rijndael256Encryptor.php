@@ -1,6 +1,6 @@
 <?php
 
-namespace SfCod\DoctrineEncryptBundle\Encryptors;
+namespace SfCod\DoctrineEncrypt\Encryptors;
 
 /**
  * Class for variable encryption

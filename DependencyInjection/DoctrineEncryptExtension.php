@@ -1,15 +1,15 @@
 <?php
 
-namespace SfCod\DoctrineEncryptBundle\DependencyInjection;
+namespace SfCod\DoctrineEncrypt\DependencyInjection;
 
 use Doctrine\Common\Annotations\Reader;
-use SfCod\DoctrineEncryptBundle\Command\DoctrineDecryptDatabaseCommand;
-use SfCod\DoctrineEncryptBundle\Command\DoctrineEncryptDatabaseCommand;
-use SfCod\DoctrineEncryptBundle\Command\DoctrineEncryptStatusCommand;
-use SfCod\DoctrineEncryptBundle\Encryptors\Rijndael128Encryptor;
-use SfCod\DoctrineEncryptBundle\Encryptors\Rijndael256Encryptor;
-use SfCod\DoctrineEncryptBundle\Services\Encryptor;
-use SfCod\DoctrineEncryptBundle\Subscribers\DoctrineEncryptSubscriber;
+use SfCod\DoctrineEncrypt\Command\DoctrineDecryptDatabaseCommand;
+use SfCod\DoctrineEncrypt\Command\DoctrineEncryptDatabaseCommand;
+use SfCod\DoctrineEncrypt\Command\DoctrineEncryptStatusCommand;
+use SfCod\DoctrineEncrypt\Encryptors\Rijndael128Encryptor;
+use SfCod\DoctrineEncrypt\Encryptors\Rijndael256Encryptor;
+use SfCod\DoctrineEncrypt\Services\Encryptor;
+use SfCod\DoctrineEncrypt\Subscribers\DoctrineEncryptSubscriber;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;

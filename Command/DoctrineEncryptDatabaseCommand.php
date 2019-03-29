@@ -1,8 +1,8 @@
 <?php
 
-namespace SfCod\DoctrineEncryptBundle\Command;
+namespace SfCod\DoctrineEncrypt\Command;
 
-use SfCod\DoctrineEncryptBundle\DependencyInjection\DoctrineEncryptExtension;
+use SfCod\DoctrineEncrypt\DependencyInjection\DoctrineEncryptExtension;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -54,7 +54,7 @@ class DoctrineEncryptDatabaseCommand extends AbstractCommand
                 } else {
                     $output->writeln('\nGiven encryptor does not exists');
                     $output->writeln('Supported encryptors: ' . implode(', ', array_keys($supportedExtensions)));
-                    $output->writeln('You can also define your own class. (example: SfCod\DoctrineEncryptBundle\Encryptors\Rijndael128Encryptor)');
+                    $output->writeln('You can also define your own class. (example: SfCod\DoctrineEncrypt\Encryptors\Rijndael128Encryptor)');
                     return;
                 }
             }

@@ -1,9 +1,9 @@
 <?php
 
-namespace SfCod\DoctrineEncryptBundle\Command;
+namespace SfCod\DoctrineEncrypt\Command;
 
 use Doctrine\Common\Annotations\Reader;
-use SfCod\DoctrineEncryptBundle\Subscribers\DoctrineEncryptSubscriber;
+use SfCod\DoctrineEncrypt\Subscribers\DoctrineEncryptSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -114,7 +114,7 @@ abstract class AbstractCommand extends Command
         $properties    = [];
 
         foreach ($propertyArray as $property) {
-            if ($this->annotationReader->getPropertyAnnotation($property, 'SfCod\DoctrineEncryptBundle\Configuration\Encrypted')) {
+            if ($this->annotationReader->getPropertyAnnotation($property, 'SfCod\DoctrineEncrypt\Configuration\Encrypted')) {
                 $properties[] = $property;
             }
         }

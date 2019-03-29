@@ -2,7 +2,7 @@
 namespace YourBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use SfCod\DoctrineEncryptBundle\Configuration\Encrypted;
+use SfCod\DoctrineEncrypt\Configuration\Encrypted;
 
 /**
  * This is an user entity which contains user information

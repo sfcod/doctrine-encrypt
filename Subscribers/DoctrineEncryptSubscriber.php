@@ -1,6 +1,6 @@
 <?php
 
-namespace SfCod\DoctrineEncryptBundle\Subscribers;
+namespace SfCod\DoctrineEncrypt\Subscribers;
 
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Events;
@@ -11,7 +11,7 @@ use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
 use \ReflectionClass;
-use SfCod\DoctrineEncryptBundle\Encryptors\EncryptorInterface;
+use SfCod\DoctrineEncrypt\Encryptors\EncryptorInterface;
 
 /**
  * Doctrine event subscriber which encrypt/decrypt entities
@@ -21,12 +21,12 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
     /**
      * Encryptor interface namespace
      */
-    const ENCRYPTOR_INTERFACE_NS = 'SfCod\DoctrineEncryptBundle\Encryptors\EncryptorInterface';
+    const ENCRYPTOR_INTERFACE_NS = 'SfCod\DoctrineEncrypt\Encryptors\EncryptorInterface';
 
     /**
      * Encrypted annotation full name
      */
-    const ENCRYPTED_ANN_NAME = 'SfCod\DoctrineEncryptBundle\Configuration\Encrypted';
+    const ENCRYPTED_ANN_NAME = 'SfCod\DoctrineEncrypt\Configuration\Encrypted';
 
     /**
      * Encryptor
