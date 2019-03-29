@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use SfCod\DoctrineEncryptBundle\DependencyInjection\DoctrineEncryptExtension;
 use SfCod\DoctrineEncryptBundle\DependencyInjection\Compiler\RegisterServiceCompilerPass;
 
-class SfCodDoctrineEncryptBundle extends Bundle {
+class DoctrineEncryptBundle extends Bundle {
     
     public function build(ContainerBuilder $container) {
         parent::build($container);
