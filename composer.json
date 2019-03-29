@@ -14,20 +14,5 @@
         "psr-4": {
             "SfCod\\DoctrineEncryptBundle\\": ""
         }
-    },
-    "authors": [
-        {
-            "name": "Marcel van Nuil",
-            "email": "marcel@ambta.com"
-        },
-        {
-            "name": "Orlov Aleksey",
-            "email": "aaorlov88@gmail.com"
-        },
-        {
-            "name": "Virchenko Maksim",
-            "email": "muslim1992@gmail.com",
-            "role": "Developer"
-        }
-    ]
+    }
 }
