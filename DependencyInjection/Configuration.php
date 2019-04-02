@@ -28,6 +28,8 @@ class Configuration implements ConfigurationInterface {
                 ->children()
                     ->scalarNode('secret_key')
                     ->end()
+                    ->scalarNode('secret_iv')
+                    ->end()
                     ->scalarNode('encryptor')
                     ->end()
                     ->scalarNode('encryptor_class')

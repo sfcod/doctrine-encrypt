@@ -20,14 +20,15 @@ class Encryptor
      * Encryptor constructor.
      *
      * @param $encryptName
-     * @param $key
+     * @param $secretKey
+     * @param $secretIv
      *
      * @throws \ReflectionException
      */
-    public function __construct(string $encryptName, string $key)
+    public function __construct(string $encryptName, string $secretKey, string $secretIv)
     {
         $reflectionClass = new ReflectionClass($encryptName);
-        $this->encryptor = $reflectionClass->newInstanceArgs([$key]);
+        $this->encryptor = $reflectionClass->newInstanceArgs([$secretKey, $secretIv]);
     }
 
     /**

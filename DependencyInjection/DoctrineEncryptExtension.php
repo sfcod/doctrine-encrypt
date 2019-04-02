@@ -7,7 +7,7 @@ use SfCod\DoctrineEncrypt\Command\DoctrineDecryptDatabaseCommand;
 use SfCod\DoctrineEncrypt\Command\DoctrineEncryptDatabaseCommand;
 use SfCod\DoctrineEncrypt\Command\DoctrineEncryptStatusCommand;
 use SfCod\DoctrineEncrypt\Encryptors\Rijndael128Encryptor;
-use SfCod\DoctrineEncrypt\Encryptors\Rijndael256Encryptor;
+use SfCod\DoctrineEncrypt\Encryptors\AES256Encryptor;
 use SfCod\DoctrineEncrypt\Services\Encryptor;
 use SfCod\DoctrineEncrypt\Subscribers\DoctrineEncryptSubscriber;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -32,8 +32,7 @@ class DoctrineEncryptExtension extends Extension
      * @var array
      */
     public static $supportedEncryptorClasses = [
-        'rijndael256' => Rijndael256Encryptor::class,
-        'rijndael128' => Rijndael128Encryptor::class,
+        AES256Encryptor::class,
     ];
 
     /**
@@ -54,11 +53,19 @@ class DoctrineEncryptExtension extends Extension
             }
         }
 
-        if (empty($config['encryptor_class'])) {
-            if (isset($config['encryptor']) && isset($supportedEncryptorClasses[$config['encryptor']])) {
-                $config['encryptor_class'] = $supportedEncryptorClasses[$config['encryptor']];
+        if (empty($config['secret_iv'])) {
+            if (getenv('APP_SECRET')) {
+                $config['secret_iv'] = strrev(getenv('APP_SECRET'));
             } else {
-                $config['encryptor_class'] = $supportedEncryptorClasses['rijndael256'];
+                throw new \RuntimeException('You must provide "secret_iv" for DoctrineEncryptBundle or "APP_SECRET"  in ".env" for framework');
+            }
+        }
+
+        if (empty($config['encryptor_class'])) {
+            if (isset($config['encryptor']) && in_array($config['encryptor'], $supportedEncryptorClasses)) {
+                $config['encryptor_class'] = $config['encryptor'];
+            } else {
+                $config['encryptor_class'] = $supportedEncryptorClasses[0];
             }
         }
 
@@ -67,6 +74,7 @@ class DoctrineEncryptExtension extends Extension
             new Reference(Reader::class),
             $config['encryptor_class'],
             $config['secret_key'],
+            $config['secret_iv'],
         ]);
         $subscriber->addTag('doctrine.event_subscriber');
 
@@ -74,6 +82,7 @@ class DoctrineEncryptExtension extends Extension
         $encryptor->setArguments([
             $config['encryptor_class'],
             $config['secret_key'],
+            $config['secret_iv'],
         ]);
 
         $container->addDefinitions([

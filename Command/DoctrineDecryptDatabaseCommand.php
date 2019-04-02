@@ -45,17 +45,16 @@ class DoctrineDecryptDatabaseCommand extends AbstractCommand
         $batchSize = $input->getArgument('batchSize');
 
         //If encryptor has been set use that encryptor else use default
-        if($input->getArgument('encryptor')) {
-            if(isset($supportedExtensions[$input->getArgument('encryptor')])) {
+        if ($input->getArgument('encryptor')) {
+            if (isset($supportedExtensions[$input->getArgument('encryptor')])) {
                 $this->subscriber->setEncryptor($supportedExtensions[$input->getArgument('encryptor')]);
             } else {
-                if(class_exists($input->getArgument('encryptor')))
-                {
+                if (class_exists($input->getArgument('encryptor'))) {
                     $this->subscriber->setEncryptor($input->getArgument('encryptor'));
                 } else {
                     $output->writeln('\nGiven encryptor does not exists');
                     $output->writeln('Supported encryptors: ' . implode(', ', array_keys($supportedExtensions)));
-                    $output->writeln('You can also define your own class. (example: SfCod\DoctrineEncrypt\Encryptors\Rijndael128Encryptor)');
+                    $output->writeln('You can also define your own class. (example: SfCod\DoctrineEncrypt\Encryptors\AES256Encryptor)');
                     return;
                 }
             }
@@ -66,7 +65,7 @@ class DoctrineDecryptDatabaseCommand extends AbstractCommand
 
         //Set counter and loop through entity manager meta data
         $propertyCount = 0;
-        foreach($metaDataArray as $metaData) {
+        foreach ($metaDataArray as $metaData) {
             if ($metaData->isMappedSuperclass) {
                 continue;
             }
@@ -93,14 +92,14 @@ class DoctrineDecryptDatabaseCommand extends AbstractCommand
         $valueCounter = 0;
 
         //Loop through entity manager meta data
-        foreach($this->getEncryptionableEntityMetaData() as $metaData) {
+        foreach ($this->getEncryptionableEntityMetaData() as $metaData) {
             $i = 0;
             $iterator = $this->getEntityIterator($metaData->name);
             $totalCount = $this->getTableCount($metaData->name);
 
             $output->writeln(sprintf('Processing <comment>%s</comment>', $metaData->name));
             $progressBar = new ProgressBar($output, $totalCount);
-            foreach($iterator as $row) {
+            foreach ($iterator as $row) {
                 $entity = $row[0];
 
                 //Create reflectionClass for each entity
@@ -110,7 +109,7 @@ class DoctrineDecryptDatabaseCommand extends AbstractCommand
                 $encryptorUsed = $this->subscriber->getEncryptor();
 
                 //Loop through the property's in the entity
-                foreach($this->getEncryptionableProperties($metaData) as $property) {
+                foreach ($this->getEncryptionableProperties($metaData) as $property) {
                     //Get and check getters and setters
                     $methodeName = ucfirst($property->getName());
 
@@ -118,7 +117,7 @@ class DoctrineDecryptDatabaseCommand extends AbstractCommand
                     $setter = "set" . $methodeName;
 
                     //Check if getter and setter are set
-                    if($entityReflectionClass->hasMethod($getter) && $entityReflectionClass->hasMethod($setter)) {
+                    if ($entityReflectionClass->hasMethod($getter) && $entityReflectionClass->hasMethod($setter)) {
 
                         //Get decrypted data
                         $unencrypted = $entity->$getter();

@@ -11,22 +11,24 @@ use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
 use \ReflectionClass;
+use SfCod\DoctrineEncrypt\Configuration\Encrypted;
 use SfCod\DoctrineEncrypt\Encryptors\EncryptorInterface;
 
 /**
  * Doctrine event subscriber which encrypt/decrypt entities
  */
-class DoctrineEncryptSubscriber implements EventSubscriber {
+class DoctrineEncryptSubscriber implements EventSubscriber
+{
 
     /**
      * Encryptor interface namespace
      */
-    const ENCRYPTOR_INTERFACE_NS = 'SfCod\DoctrineEncrypt\Encryptors\EncryptorInterface';
+    const ENCRYPTOR_INTERFACE_NS = EncryptorInterface::class;
 
     /**
      * Encrypted annotation full name
      */
-    const ENCRYPTED_ANN_NAME = 'SfCod\DoctrineEncrypt\Configuration\Encrypted';
+    const ENCRYPTED_ANN_NAME = Encrypted::class;
 
     /**
      * Encryptor
@@ -45,6 +47,12 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      * @var string
      */
     private $secretKey;
+
+    /**
+     * Secret initialization vector
+     * @var string
+     */
+    private $secretIv;
 
     /**
      * Used for restoring the encryptor after changing it
@@ -68,22 +76,19 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      * Initialization of subscriber
      *
      * @param Reader $annReader
-     * @param string $encryptorClass  The encryptor class.  This can be empty if a service is being provided.
+     * @param string $encryptorClass The encryptor class.  This can be empty if a service is being provided.
      * @param string $secretKey The secret key.
+     * @param string $secretIv The secret initialization vector.
      * @param EncryptorInterface|NULL $service (Optional)  An EncryptorInterface.
      *
      * This allows for the use of dependency injection for the encrypters.
      */
-    public function __construct(Reader $annReader, $encryptorClass, $secretKey, EncryptorInterface $service = NULL) {
+    public function __construct(Reader $annReader, $encryptorClass, $secretKey, $secretIv)
+    {
         $this->annReader = $annReader;
         $this->secretKey = $secretKey;
-
-        if ($service instanceof EncryptorInterface) {
-            $this->encryptor = $service;
-        } else {
-            $this->encryptor = $this->encryptorFactory($encryptorClass, $secretKey);
-        }
-
+        $this->secretIv = $secretIv;
+        $this->encryptor = $this->encryptorFactory($encryptorClass, $secretKey, $secretIv);
         $this->restoreEncryptor = $this->encryptor;
     }
 
@@ -92,10 +97,10 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      *
      * @param $encryptorClass
      */
-    public function setEncryptor($encryptorClass) {
-
-        if(!is_null($encryptorClass)) {
-            $this->encryptor = $this->encryptorFactory($encryptorClass, $this->secretKey);
+    public function setEncryptor($encryptorClass)
+    {
+        if (!is_null($encryptorClass)) {
+            $this->encryptor = $this->encryptorFactory($encryptorClass, $this->secretKey, $this->secretIv);
             return;
         }
 
@@ -105,8 +110,9 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
     /**
      * Get the current encryptor
      */
-    public function getEncryptor() {
-        if(!empty($this->encryptor)) {
+    public function getEncryptor()
+    {
+        if (!empty($this->encryptor)) {
             return get_class($this->encryptor);
         } else {
             return null;
@@ -116,7 +122,8 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
     /**
      * Restore encryptor set in config
      */
-    public function restoreEncryptor() {
+    public function restoreEncryptor()
+    {
         $this->encryptor = $this->restoreEncryptor;
     }
 
@@ -129,11 +136,10 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      *
      * @param LifecycleEventArgs $args
      */
-    public function postUpdate(LifecycleEventArgs $args) {
-
+    public function postUpdate(LifecycleEventArgs $args)
+    {
         $entity = $args->getEntity();
         $this->processFields($entity, false);
-
     }
 
     /**
@@ -142,7 +148,8 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      *
      * @param PreUpdateEventArgs $args
      */
-    public function preUpdate(PreUpdateEventArgs $args) {
+    public function preUpdate(PreUpdateEventArgs $args)
+    {
         $entity = $args->getEntity();
         $this->processFields($entity);
     }
@@ -153,12 +160,11 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      *
      * @param LifecycleEventArgs $args
      */
-    public function postLoad(LifecycleEventArgs $args) {
-
+    public function postLoad(LifecycleEventArgs $args)
+    {
         //Get entity and process fields
         $entity = $args->getEntity();
         $this->processFields($entity, false);
-
     }
 
     /**
@@ -167,9 +173,10 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      *
      * @param PreFlushEventArgs $preFlushEventArgs
      */
-    public function preFlush(PreFlushEventArgs $preFlushEventArgs) {
+    public function preFlush(PreFlushEventArgs $preFlushEventArgs)
+    {
         $unitOfWork = $preFlushEventArgs->getEntityManager()->getUnitOfWork();
-        foreach($unitOfWork->getScheduledEntityInsertions() as $entity) {
+        foreach ($unitOfWork->getScheduledEntityInsertions() as $entity) {
             $this->processFields($entity);
         }
     }
@@ -180,10 +187,11 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      *
      * @param PostFlushEventArgs $postFlushEventArgs
      */
-    public function postFlush(PostFlushEventArgs $postFlushEventArgs) {
+    public function postFlush(PostFlushEventArgs $postFlushEventArgs)
+    {
         $unitOfWork = $postFlushEventArgs->getEntityManager()->getUnitOfWork();
-        foreach($unitOfWork->getIdentityMap() as $entityMap) {
-            foreach($entityMap as $entity) {
+        foreach ($unitOfWork->getIdentityMap() as $entityMap) {
+            foreach ($entityMap as $entity) {
                 $this->processFields($entity, false);
             }
         }
@@ -194,7 +202,8 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      *
      * @return Array Return all events which this subscriber is listening
      */
-    public function getSubscribedEvents() {
+    public function getSubscribedEvents()
+    {
         return array(
             Events::postUpdate,
             Events::preUpdate,
@@ -210,19 +219,18 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      * @param Object $entity doctrine entity
      * @param Boolean $isEncryptOperation If true - encrypt, false - decrypt entity
      *
+     * @return object|null
      * @throws \RuntimeException
      *
-     * @return object|null
      */
-    public function processFields($entity, $isEncryptOperation = true) {
-
-        if(!empty($this->encryptor)) {
-
+    public function processFields($entity, $isEncryptOperation = true)
+    {
+        if (!empty($this->encryptor)) {
             //Check which operation to be used
             $encryptorMethod = $isEncryptOperation ? 'encrypt' : 'decrypt';
 
             //Get the real class, we don't want to use the proxy classes
-            if(strstr(get_class($entity), "Proxies")) {
+            if (strstr(get_class($entity), "Proxies")) {
                 $realClass = ClassUtils::getClass($entity);
             } else {
                 $realClass = get_class($entity);
@@ -234,7 +242,6 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
 
             //Foreach property in the reflection class
             foreach ($properties as $refProperty) {
-
                 if ($this->annReader->getPropertyAnnotation($refProperty, 'Doctrine\ORM\Mapping\Embedded')) {
                     $this->handleEmbeddedAnnotation($entity, $refProperty, $isEncryptOperation);
                     continue;
@@ -245,13 +252,10 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
                  */
                 $methodName = ucfirst($refProperty->getName());
 
-
                 /**
                  * If property is an normal value and contains the Encrypt tag, lets encrypt/decrypt that property
                  */
                 if ($this->annReader->getPropertyAnnotation($refProperty, self::ENCRYPTED_ANN_NAME)) {
-
-
                     /**
                      * If it is public lets not use the getter/setter
                      */
@@ -261,11 +265,10 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
                     } else {
                         //If private or protected check if there is an getter/setter for the property, based on the $methodName
                         if ($reflectionClass->hasMethod($getter = 'get' . $methodName) && $reflectionClass->hasMethod($setter = 'set' . $methodName)) {
-
                             //Get the information (value) of the property
                             try {
                                 $getInformation = $entity->$getter();
-                            } catch(\Exception $e) {
+                            } catch (\Exception $e) {
                                 $getInformation = null;
                             }
 
@@ -273,17 +276,17 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
                              * Then decrypt, encrypt the information if not empty, information is an string and the <ENC> tag is there (decrypt) or not (encrypt).
                              * The <ENC> will be added at the end of an encrypted string so it is marked as encrypted. Also protects against double encryption/decryption
                              */
-                            if($encryptorMethod == "decrypt") {
-                                if(!is_null($getInformation) and !empty($getInformation)) {
-                                    if(substr($getInformation, -5) == "<ENC>") {
+                            if ($encryptorMethod == "decrypt") {
+                                if (!is_null($getInformation) and !empty($getInformation)) {
+                                    if (substr($getInformation, -5) == "<ENC>") {
                                         $this->decryptCounter++;
                                         $currentPropValue = $this->encryptor->decrypt(substr($getInformation, 0, -5));
                                         $entity->$setter($currentPropValue);
                                     }
                                 }
                             } else {
-                                if(!is_null($getInformation) and !empty($getInformation)) {
-                                    if(substr($entity->$getter(), -5) != "<ENC>") {
+                                if (!is_null($getInformation) and !empty($getInformation)) {
+                                    if (substr($entity->$getter(), -5) != "<ENC>") {
                                         $this->encryptCounter++;
                                         $currentPropValue = $this->encryptor->encrypt($entity->$getter());
                                         $entity->$setter($currentPropValue);
@@ -315,7 +318,7 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
                 //Get the information (value) of the property
                 try {
                     $embeddedEntity = $entity->$getter();
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $embeddedEntity = null;
                 }
             }
@@ -333,20 +336,20 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      *
      * @return array
      */
-    function getClassProperties($className){
-
+    function getClassProperties($className)
+    {
         $reflectionClass = new ReflectionClass($className);
         $properties = $reflectionClass->getProperties();
         $propertiesArray = array();
 
-        foreach($properties as $property){
+        foreach ($properties as $property) {
             $propertyName = $property->getName();
             $propertiesArray[$propertyName] = $property;
         }
 
-        if($parentClass = $reflectionClass->getParentClass()){
+        if ($parentClass = $reflectionClass->getParentClass()) {
             $parentPropertiesArray = $this->getClassProperties($parentClass->getName());
-            if(count($parentPropertiesArray) > 0)
+            if (count($parentPropertiesArray) > 0)
                 $propertiesArray = array_merge($parentPropertiesArray, $propertiesArray);
         }
 
@@ -358,14 +361,16 @@ class DoctrineEncryptSubscriber implements EventSubscriber {
      *
      * @param string $classFullName Encryptor namespace and name
      * @param string $secretKey Secret key for encryptor
+     * @param string $secretIv Secret iv for encryptor
      *
      * @return EncryptorInterface
      * @throws \RuntimeException
      */
-    private function encryptorFactory($classFullName, $secretKey) {
+    private function encryptorFactory($classFullName, $secretKey, $secretIv)
+    {
         $refClass = new \ReflectionClass($classFullName);
         if ($refClass->implementsInterface(self::ENCRYPTOR_INTERFACE_NS)) {
-            return new $classFullName($secretKey);
+            return new $classFullName($secretKey, $secretIv);
         } else {
             throw new \RuntimeException('Encryptor must implements interface EncryptorInterface');
         }
