@@ -27,7 +27,7 @@ use SfCod\DoctrineEncrypt\Configuration\Encrypted;
 ...
 
 /**
- * @Encrypt
+ * @Encrypted()
  */
 protected $username;
 ```
