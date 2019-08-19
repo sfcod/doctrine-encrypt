@@ -103,13 +103,13 @@ You can use the comment `doctrine:decrypt:database [encryptor]` to decrypt the c
     * Default: Your encryptor set in the configuration file or the default encryption class when not set in the configuration file
 
 ```
-$ php bin/console doctrine:encrypt:database
+$ php bin/console doctrine:decrypt:database
 ```
 
 or you can provide an encryptor (optional).
 
 ```
-$ php bin/console doctrine:encrypt:database App\Encryptors\Encryptor
+$ php bin/console doctrine:decrypt:database App\Encryptors\Encryptor
 ```
 
 This command will return the amount of entities and the amount of values decrypted in the database.
