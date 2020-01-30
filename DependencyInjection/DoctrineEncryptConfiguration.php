@@ -12,7 +12,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
-class Configuration implements ConfigurationInterface {
+class DoctrineEncryptConfiguration implements ConfigurationInterface {
 
     /**
      * {@inheritDoc}
@@ -20,8 +20,8 @@ class Configuration implements ConfigurationInterface {
     public function getConfigTreeBuilder() {
 
         //Create tree builder
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sfcod_doctrine_encrypt');
+        $treeBuilder = new TreeBuilder('sfcod_doctrine_encrypt');
+        $rootNode = $treeBuilder->getRootNode();
 
         // Grammar of config tree
         $rootNode

@@ -40,7 +40,7 @@ class DoctrineEncryptExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
+        $configuration = new DoctrineEncryptConfiguration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $supportedEncryptorClasses = self::$supportedEncryptorClasses;
