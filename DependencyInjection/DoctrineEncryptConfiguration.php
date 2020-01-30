@@ -4,6 +4,7 @@ namespace SfCod\DoctrineEncrypt\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Configuration tree for security bundle. Full tree you can see in Resources/docs
@@ -19,11 +20,14 @@ class DoctrineEncryptConfiguration implements ConfigurationInterface {
      */
     public function getConfigTreeBuilder() {
 
-        //Create tree builder
-        $treeBuilder = new TreeBuilder('sfcod_doctrine_encrypt');
-        $rootNode = $treeBuilder->getRootNode();
+        if (Kernel::VERSION_ID >= 40300) {
+            $treeBuilder = new TreeBuilder('sfcod_doctrine_encrypt');
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $treeBuilder = new TreeBuilder();
+            $rootNode = $treeBuilder->root('sfcod_doctrine_encrypt');
+        }
 
-        // Grammar of config tree
         $rootNode
                 ->children()
                     ->scalarNode('secret_key')
